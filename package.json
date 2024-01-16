@@ -1,0 +1,13 @@
+{
+  "name": "file-uploader",
+  "version": "1.0.0",
+  "description": "Simple file uploader web app",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "express-fileupload": "^1.2.1"
+  }
+}
