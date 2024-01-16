@@ -9,19 +9,20 @@
 </head>
 
 <body>
-    <div class="container mt-5">
-        <h2>File Upload</h2>
-        <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
-            <div class="form-group">
-                <input type="file" name="file" class="form-control">
-            </div>
-            <button type="submit" class="btn btn-primary">Upload</button>
-        </form>
-        <div id="uploadSuccess" style="display:none;">
-            <p class="mt-3">File Uploaded Successfully: <span id="fileName"></span></p>
-            <a href="/upload">View Uploaded Files</a>
+<div class="container mt-5">
+    <h2>File Upload</h2>
+    <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data" class="mb-3">
+        <div class="custom-file mb-3">
+            <input type="file" name="file" class="custom-file-input" id="customFile">
+            <label class="custom-file-label" for="customFile">Choose file</label>
         </div>
+        <button type="submit" class="btn btn-primary">Upload</button>
+    </form>
+    <div id="uploadSuccess" class="alert alert-success" style="display:none;">
+        <strong>Success!</strong> File Uploaded Successfully: <span id="fileName"></span><br>
+        <a href="/upload" class="alert-link">View Uploaded Files</a>
     </div>
+</div>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
@@ -42,6 +43,14 @@
                     }
                 })
                 .catch(error => console.error('Error:', error));
+        });
+    </script>
+
+    <script>
+        // Script pour mettre à jour le label du custom file input avec le nom du fichier
+        $(".custom-file-input").on("change", function () {
+            var fileName = $(this).val().split("\\").pop();
+            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
         });
     </script>
 
