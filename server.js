@@ -18,6 +18,9 @@ app.post('/upload', (req, res) => {
     });
 });
 
+app.get('/upload', (req, res) => {
+});
+
 app.listen(9000, () => {
     console.log('Server is running on port 9000');
 });
