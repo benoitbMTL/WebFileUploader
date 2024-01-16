@@ -1,5 +1,7 @@
 const express = require('express');
 const fileUpload = require('express-fileupload');
+const fs = require('fs');
+const path = require('path');
 const app = express();
 
 app.use(fileUpload());
@@ -19,6 +21,15 @@ app.post('/upload', (req, res) => {
 });
 
 app.get('/upload', (req, res) => {
+    const directoryPath = path.join(__dirname, 'upload');
+    fs.readdir(directoryPath, function (err, files) {
+        if (err) {
+            res.status(500).send('Unable to scan directory: ' + err);
+        } 
+        else {
+            res.send(files.join("<br>"));
+        }
+    });
 });
 
 app.listen(9000, () => {
