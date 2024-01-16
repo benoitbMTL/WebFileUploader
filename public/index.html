@@ -6,23 +6,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>File Upload</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        .spinner-border {
+            display: inline-block;
+            width: 1rem;
+            height: 1rem;
+            vertical-align: text-bottom;
+            border: 0.25em solid currentColor;
+            border-right-color: transparent;
+            border-radius: 50%;
+            animation: spinner-border .75s linear infinite;
+        }
+    </style>
+
 </head>
 
 <body>
-<div class="container mt-5">
-    <h2>File Upload</h2>
-    <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data" class="mb-3">
-        <div class="custom-file mb-3">
-            <input type="file" name="file" class="custom-file-input" id="customFile">
-            <label class="custom-file-label" for="customFile">Choose file</label>
+    <div class="container mt-5">
+        <h2>File Upload</h2>
+        <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data" class="mb-3">
+            <div class="custom-file mb-3">
+                <input type="file" name="file" class="custom-file-input" id="customFile">
+                <label class="custom-file-label" for="customFile">Choose file</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Upload</button>
+        </form>
+        <div id="uploadSuccess" class="alert alert-success" style="display:none;">
+            <strong>Success!</strong> File Uploaded Successfully: <span id="fileName"></span><br>
+            <a href="/upload" class="alert-link">View Uploaded Files</a>
         </div>
-        <button type="submit" class="btn btn-primary">Upload</button>
-    </form>
-    <div id="uploadSuccess" class="alert alert-success" style="display:none;">
-        <strong>Success!</strong> File Uploaded Successfully: <span id="fileName"></span><br>
-        <a href="/upload" class="alert-link">View Uploaded Files</a>
     </div>
-</div>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
@@ -31,6 +45,14 @@
     <script>
         document.getElementById('uploadForm').addEventListener('submit', function (e) {
             e.preventDefault();
+
+            // Reference to the upload button
+            var uploadButton = document.querySelector('#uploadForm button[type="submit"]');
+
+            // Change button text and add spinner class
+            uploadButton.innerHTML = 'Uploading... <span class="spinner-border"></span>';
+            uploadButton.disabled = true;
+
             var formData = new FormData(this);
             fetch('/upload', {
                 method: 'POST',
@@ -40,10 +62,20 @@
                     if (data.success) {
                         document.getElementById('uploadSuccess').style.display = 'block';
                         document.getElementById('fileName').textContent = data.fileName;
+
+                        // Reset button text and remove spinner
+                        uploadButton.innerHTML = 'Upload';
+                        uploadButton.disabled = false;
                     }
                 })
-                .catch(error => console.error('Error:', error));
+                .catch(error => {
+                    console.error('Error:', error);
+                    // Reset button on error as well
+                    uploadButton.innerHTML = 'Upload';
+                    uploadButton.disabled = false;
+                });
         });
+
     </script>
 
     <script>
