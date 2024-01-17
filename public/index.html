@@ -60,7 +60,7 @@
             </button>
         </div>
 
-        
+
     <div id="errorContainer" style="display:none;"></div>
 
     </div>
@@ -72,41 +72,49 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
     <script>
+
         document.getElementById('uploadForm').addEventListener('submit', function (e) {
-            e.preventDefault();
+                e.preventDefault();
 
-            var uploadButton = document.querySelector('#uploadForm button[type="submit"]');
-            uploadButton.innerHTML = 'Uploading... <span class="spinner-border"></span>';
-            uploadButton.disabled = true;
+                var uploadButton = document.querySelector('#uploadForm button[type="submit"]');
+                uploadButton.innerHTML = 'Uploading... <span class="spinner-border"></span>';
+                uploadButton.disabled = true;
 
-            var formData = new FormData(this);
-            fetch('/upload', {
-                method: 'POST',
-                body: formData
-            })
-                .then(async response => {
-                    if (!response.ok) {
-                        const errorText = await response.text();
-                        document.getElementById('errorContainer').innerHTML = errorText;
-                        document.getElementById('errorContainer').style.display = 'block';
-                        throw new Error('Network response was not ok.');
-                    }
-                    return response.json();
+                var startTime = new Date(); // Start time
+
+                var formData = new FormData(this);
+                fetch('/upload', {
+                    method: 'POST',
+                    body: formData
                 })
-                .then(data => {
-                    if (data.success) {
-                        document.getElementById('uploadSuccess').style.display = 'block';
-                        document.getElementById('fileName').textContent = data.fileName;
-                    }
-                    uploadButton.innerHTML = 'Upload File';
-                    uploadButton.disabled = false;
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    uploadButton.innerHTML = 'Upload File';
-                    uploadButton.disabled = false;
-                });
-        });
+                    .then(response => {
+                        var endTime = new Date(); // End time
+                        var uploadDuration = (endTime - startTime) / 1000; // Calculate duration in seconds
+
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok ' + response.statusText);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            document.getElementById('uploadSuccess').style.display = 'block';
+                            document.getElementById('fileName').textContent = data.fileName;
+                            // Display upload duration
+                            alert("File uploaded successfully in " + uploadDuration + " seconds");
+                        }
+                        uploadButton.innerHTML = 'Upload File';
+                        uploadButton.disabled = false;
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        uploadButton.innerHTML = 'Upload File';
+                        uploadButton.disabled = false;
+                    });
+            });
+
+
+            
 
 
         $(".custom-file-input").on("change", function () {
