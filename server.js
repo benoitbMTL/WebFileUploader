@@ -57,31 +57,33 @@ app.get("/upload", async (req, res) => {
   }
 });
 
-app.post("/delete-all", (req, res) => {
+
+
+
+app.post("/delete-all", async (req, res) => {
   const directoryPath = path.join(__dirname, "upload");
 
-  fs.readdir(directoryPath, (err, files) => {
-    if (err) {
-      res
-        .status(500)
-        .json({ success: false, message: "Unable to scan directory: " + err });
-      return;
-    }
+  try {
+    const files = await util.promisify(fs.readdir)(directoryPath);
 
-    files.forEach((file) => {
-      fs.unlink(path.join(directoryPath, file), (err) => {
-        if (err) {
-          res
-            .status(500)
-            .json({ success: false, message: "Unable to delete file: " + err });
-          return;
-        }
-      });
-    });
+    // Attendre la suppression de tous les fichiers
+    await Promise.all(
+      files.map((file) => {
+        return util.promisify(fs.unlink)(path.join(directoryPath, file));
+      })
+    );
 
     res.json({ success: true, message: "All files have been deleted" });
-  });
+  } catch (err) {
+    res
+      .status(500)
+      .json({ success: false, message: "Error deleting files: " + err });
+  }
 });
+
+
+
+
 
 app.listen(9000, () => {
   console.log("Server is running on port 9000");

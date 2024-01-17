@@ -24,26 +24,42 @@
 
 <body>
     <div class="container mt-5">
+
+
+        
         <h2>File Upload</h2>
+
+
+
         <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data" class="mb-3">
             <div class="custom-file mb-3">
                 <input type="file" name="file" class="custom-file-input" id="customFile">
                 <label class="custom-file-label" for="customFile">Choose file</label>
             </div>
 
-            <!-- Container pour les boutons avec espace -->
             <div>
-                <button type="submit" class="btn btn-primary mr-2">Upload File</button> <!-- espace ajouté ici -->
+                <button type="submit" class="btn btn-primary mr-2">Upload File</button>
                 <button id="deleteAllButton" class="btn btn-danger">Delete All Files</button>
             </div>
         </form>
-        <div id="uploadSuccess" class="alert alert-success" style="display:none;">
+
+
+
+        <div id="uploadSuccess" class="alert alert-success alert-dismissible fade show" style="display:none;">
             <strong>Success!</strong> File Uploaded Successfully: <span id="fileName"></span><br>
             <a href="/upload" class="alert-link">View Uploaded Files</a>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
-        <div id="deleteSuccess" class="alert alert-danger" style="display:none;">
-            <strong>Success!</strong> All files have been deleted successfully.
+        <div id="deleteSuccess" class="alert alert-danger alert-dismissible fade show" style="display:none;">
+            <strong>Success!</strong> All files have been deleted successfully.<br>
+            <a href="/upload" class="alert-link">View Repository</a>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
+
 
 
     </div>
@@ -82,7 +98,7 @@
                 .catch(error => {
                     console.error('Error:', error);
                     // Reset button on error as well
-                    uploadButton.innerHTML = 'Upload';
+                    uploadButton.innerHTML = 'Upload File';
                     uploadButton.disabled = false;
                 });
         });
@@ -96,24 +112,16 @@
 
 
 
-    document.getElementById('deleteAllButton').addEventListener('click', function () {
-        // Masquer le message de succès de l'upload
-        document.getElementById('uploadSuccess').style.display = 'none';
-
-        fetch('/delete-all', { method: 'POST' })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Afficher le message de succès de suppression
-                    document.getElementById('deleteSuccess').style.display = 'block';
-                    // Masquer le message après quelques secondes
-                    setTimeout(() => {
-                        document.getElementById('deleteSuccess').style.display = 'none';
-                    }, 3000);
-                }
-            })
-            .catch(error => console.error('Error:', error));
-    });
+        document.getElementById('deleteAllButton').addEventListener('click', function () {
+            fetch('/delete-all', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('deleteSuccess').style.display = 'block';
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        });
 
 
 
