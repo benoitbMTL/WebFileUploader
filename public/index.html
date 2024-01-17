@@ -26,7 +26,7 @@
     <div class="container mt-5">
 
 
-        
+
         <h2>File Upload</h2>
 
 
@@ -73,10 +73,7 @@
         document.getElementById('uploadForm').addEventListener('submit', function (e) {
             e.preventDefault();
 
-            // Reference to the upload button
             var uploadButton = document.querySelector('#uploadForm button[type="submit"]');
-
-            // Change button text and add spinner class
             uploadButton.innerHTML = 'Uploading... <span class="spinner-border"></span>';
             uploadButton.disabled = true;
 
@@ -84,22 +81,26 @@
             fetch('/upload', {
                 method: 'POST',
                 body: formData
-            }).then(response => response.json())
+            }).then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
                 .then(data => {
                     if (data.success) {
                         document.getElementById('uploadSuccess').style.display = 'block';
                         document.getElementById('fileName').textContent = data.fileName;
-
-                        // Reset button text and remove spinner
-                        uploadButton.innerHTML = 'Upload File';
-                        uploadButton.disabled = false;
                     }
+                    uploadButton.innerHTML = 'Upload File';
+                    uploadButton.disabled = false;
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    // Reset button on error as well
                     uploadButton.innerHTML = 'Upload File';
                     uploadButton.disabled = false;
+                    // Ici, afficher la page d'erreur ou un message d'erreur
+                    alert("Failed to upload file: " + error.message);
                 });
         });
 
