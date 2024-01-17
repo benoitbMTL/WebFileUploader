@@ -84,6 +84,7 @@
 
         // Function to hide all messages
         function hideAllMessages() {
+            console.log("Hiding all messages.");
             document.getElementById('uploadSuccess').style.display = 'none';
             document.getElementById('deleteSuccess').style.display = 'none';
             document.getElementById('uploadBlocked').style.display = 'none';
@@ -92,14 +93,15 @@
 
         document.getElementById('uploadForm').addEventListener('submit', function (e) {
             e.preventDefault();
+            console.log("Upload form submitted.");
             hideAllMessages(); // Hide messages on form submit
 
             var uploadButton = document.querySelector('#uploadForm button[type="submit"]');
             uploadButton.innerHTML = 'Uploading... <span class="spinner-border"></span>';
             uploadButton.disabled = true;
 
-
-            var startTime = new Date(); // Start time
+            var startTime = new Date();
+            console.log("Upload started at:", startTime);
 
             var formData = new FormData(this);
             fetch('/upload', {
@@ -107,68 +109,57 @@
                 body: formData
             })
                 .then(response => {
+                    console.log("Upload response received. Status:", response.status);
                     if (response.ok) {
                         return response.json();
                     } else if (response.status === 500) {
-                        // Handling for FortiWeb block
                         throw new Error('Upload blocked by FortiWeb');
                     } else {
-                        throw new Error('Network response was not ok ' + response.statusText);
+                        throw new Error('Network response was not ok: ' + response.statusText);
                     }
                 })
                 .then(data => {
-                    if (data.success) {
-                        var endTime = new Date(); // End time
-                        var uploadDuration = (endTime -
-                            startTime) / 1000; // Calculate duration in seconds
-
-                        document.getElementById('uploadSuccess').style.display = 'block';
-                        document.getElementById('fileName').textContent = data.fileName;
-                        // Update upload duration in the div
-                        document.getElementById('uploadDuration').textContent = uploadDuration.toFixed(2);
-                    }
+                    console.log("Upload success. Data:", data);
+                    var endTime = new Date();
+                    var uploadDuration = (endTime - startTime) / 1000;
+                    document.getElementById('uploadSuccess').style.display = 'block';
+                    document.getElementById('fileName').textContent = data.fileName;
+                    document.getElementById('uploadDuration').textContent = uploadDuration.toFixed(2);
                     uploadButton.innerHTML = 'Upload File';
                     uploadButton.disabled = false;
                 })
                 .catch(error => {
+                    console.error('Error:', error);
                     if (error.message === 'Upload blocked by FortiWeb') {
                         document.getElementById('uploadBlocked').style.display = 'block';
-                    } else {
-                        console.error('Error:', error);
                     }
                     uploadButton.innerHTML = 'Upload File';
                     uploadButton.disabled = false;
                 });
         });
 
-
-
-
-
-
         $(".custom-file-input").on("change", function () {
-            hideAllMessages(); // Hide messages on file input change
-            var fileName = $(this).val().split("\\").pop();
-            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+            console.log("File selected:", $(this).val());
+            hideAllMessages();
         });
-
-
-
 
         document.getElementById('deleteAllButton').addEventListener('click', function () {
-            hideAllMessages(); // Hide messages on delete all files button click
+            console.log("Delete all button clicked.");
+            hideAllMessages();
+
             fetch('/delete-all', { method: 'POST' })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        document.getElementById('deleteSuccess').style.display = 'block';
-                    }
+                .then(response => {
+                    console.log("Delete response received. Status:", response.status);
+                    return response.json();
                 })
-                .catch(error => console.error('Error:', error));
+                .then(data => {
+                    console.log("Delete operation success. Data:", data);
+                    document.getElementById('deleteSuccess').style.display = 'block';
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
         });
-
-
-
     </script>
 
 
