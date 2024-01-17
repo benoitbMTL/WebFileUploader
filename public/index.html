@@ -40,6 +40,8 @@
             <div>
                 <button type="submit" class="btn btn-primary mr-2">Upload File</button>
                 <button id="deleteAllButton" class="btn btn-danger">Delete All Files</button>
+                <button id="hardReloadButton" class="btn btn-secondary">Reset</button>
+
             </div>
 
         </form>
@@ -49,7 +51,6 @@
         <div id="uploadSuccess" class="alert alert-success alert-dismissible fade show" style="display:none;">
             <strong>Success!</strong> File Uploaded Successfully: <span id="fileName"></span><br>
             Upload Duration: <span id="uploadDuration"></span> seconds<br>
-            <a href="/upload" class="alert-link">View Uploaded Files</a>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -57,7 +58,6 @@
 
         <div id="deleteSuccess" class="alert alert-danger alert-dismissible fade show" style="display:none;">
             <strong>Done!</strong> All files have been deleted successfully.<br>
-            <a href="/upload" class="alert-link">View Repository</a>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -71,6 +71,13 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
+
+
+
+                <div class="mt-4">
+                    <h3>Uploaded Files</h3>
+                    <iframe src="/upload" style="width:100%; height:300px; border:none;"></iframe>
+                </div>
 
     </div>
 
@@ -168,6 +175,16 @@
                     console.error('Error:', error);
                 });
         });
+
+
+
+
+        document.getElementById('hardReloadButton').addEventListener('click', function () {
+                window.location.reload(true); // The 'true' parameter attempts to force a reload without cache.
+            });
+
+
+            
     </script>
 
 
