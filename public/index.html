@@ -81,8 +81,18 @@
 
     <script>
 
+
+        // Function to hide all messages
+        function hideAllMessages() {
+            document.getElementById('uploadSuccess').style.display = 'none';
+            document.getElementById('deleteSuccess').style.display = 'none';
+            document.getElementById('uploadBlocked').style.display = 'none';
+        }
+
+
         document.getElementById('uploadForm').addEventListener('submit', function (e) {
             e.preventDefault();
+            hideAllMessages(); // Hide messages on form submit
 
             var uploadButton = document.querySelector('#uploadForm button[type="submit"]');
             uploadButton.innerHTML = 'Uploading... <span class="spinner-border"></span>';
@@ -137,6 +147,7 @@
 
 
         $(".custom-file-input").on("change", function () {
+            hideAllMessages(); // Hide messages on file input change
             var fileName = $(this).val().split("\\").pop();
             $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
         });
@@ -145,6 +156,7 @@
 
 
         document.getElementById('deleteAllButton').addEventListener('click', function () {
+            hideAllMessages(); // Hide messages on delete all files button click
             fetch('/delete-all', { method: 'POST' })
                 .then(response => response.json())
                 .then(data => {
