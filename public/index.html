@@ -82,6 +82,7 @@
             uploadButton.innerHTML = 'Uploading... <span class="spinner-border"></span>';
             uploadButton.disabled = true;
 
+
             var startTime = new Date(); // Start time
 
             var formData = new FormData(this);
@@ -90,9 +91,6 @@
                 body: formData
             })
                 .then(response => {
-                    var endTime = new Date(); // End time
-                    var uploadDuration = (endTime - startTime) / 1000; // Calculate duration in seconds
-
                     if (!response.ok) {
                         throw new Error('Network response was not ok ' + response.statusText);
                     }
@@ -100,6 +98,10 @@
                 })
                 .then(data => {
                     if (data.success) {
+                        var endTime = new Date(); // End time
+                        var uploadDuration = (endTime -
+                            startTime) / 1000; // Calculate duration in seconds
+
                         document.getElementById('uploadSuccess').style.display = 'block';
                         document.getElementById('fileName').textContent = data.fileName;
                         // Update upload duration in the div
@@ -114,6 +116,7 @@
                     uploadButton.disabled = false;
                 });
         });
+
 
 
 
