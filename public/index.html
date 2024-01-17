@@ -47,11 +47,13 @@
 
         <div id="uploadSuccess" class="alert alert-success alert-dismissible fade show" style="display:none;">
             <strong>Success!</strong> File Uploaded Successfully: <span id="fileName"></span><br>
+            Upload Duration: <span id="uploadDuration"></span> seconds<br>
             <a href="/upload" class="alert-link">View Uploaded Files</a>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
+
         <div id="deleteSuccess" class="alert alert-danger alert-dismissible fade show" style="display:none;">
             <strong>Success!</strong> All files have been deleted successfully.<br>
             <a href="/upload" class="alert-link">View Repository</a>
@@ -81,7 +83,6 @@
             uploadButton.disabled = true;
 
             var startTime = new Date(); // Start time
-            var uploadDuration; // Declare uploadDuration outside the fetch
 
             var formData = new FormData(this);
             fetch('/upload', {
@@ -90,7 +91,7 @@
             })
                 .then(response => {
                     var endTime = new Date(); // End time
-                    uploadDuration = (endTime - startTime) / 1000; // Calculate and set duration
+                    var uploadDuration = (endTime - startTime) / 1000; // Calculate duration in seconds
 
                     if (!response.ok) {
                         throw new Error('Network response was not ok ' + response.statusText);
@@ -101,8 +102,8 @@
                     if (data.success) {
                         document.getElementById('uploadSuccess').style.display = 'block';
                         document.getElementById('fileName').textContent = data.fileName;
-                        // Display upload duration
-                        alert("File uploaded successfully in " + uploadDuration + " seconds");
+                        // Update upload duration in the div
+                        document.getElementById('uploadDuration').textContent = uploadDuration.toFixed(2);
                     }
                     uploadButton.innerHTML = 'Upload File';
                     uploadButton.disabled = false;
