@@ -66,7 +66,6 @@ app.post("/delete-all", async (req, res) => {
   try {
     const files = await util.promisify(fs.readdir)(directoryPath);
 
-    // Attendre la suppression de tous les fichiers
     await Promise.all(
       files.map((file) => {
         return util.promisify(fs.unlink)(path.join(directoryPath, file));
