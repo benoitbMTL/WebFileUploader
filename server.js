@@ -45,10 +45,7 @@ app.get("/upload", async (req, res) => {
                 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
             </head>
             <body>
-                <div class="container mt-5">
-                    <h2>Uploaded Files</h2>
                     <ul>${fileInfos.join("")}</ul>
-                </div>
             </body>
             </html>
         `);
