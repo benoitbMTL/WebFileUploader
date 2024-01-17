@@ -41,6 +41,7 @@
                 <button type="submit" class="btn btn-primary mr-2">Upload File</button>
                 <button id="deleteAllButton" class="btn btn-danger">Delete All Files</button>
             </div>
+
         </form>
 
 
@@ -94,7 +95,7 @@
         document.getElementById('uploadForm').addEventListener('submit', function (e) {
             e.preventDefault();
             console.log("Upload form submitted.");
-            // hideAllMessages(); // Hide messages on form submit
+            hideAllMessages(); // Hide messages on form submit
 
             var uploadButton = document.querySelector('#uploadForm button[type="submit"]');
             uploadButton.innerHTML = 'Uploading... <span class="spinner-border"></span>';
@@ -138,10 +139,17 @@
                 });
         });
 
-        $(".custom-file-input").on("change", function () {
-            console.log("File selected:", $(this).val());
-            hideAllMessages();
-        });
+    $(".custom-file-input").on("change", function () {
+        console.log("File selected:", $(this).val());
+        hideAllMessages();
+
+        // Get the selected file's name
+        var fileName = $(this).val().split("\\").pop(); // This will extract the file name from the path
+
+        // Set the file name on the label
+        $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+    });
+
 
         document.getElementById('deleteAllButton').addEventListener('click', function () {
             console.log("Delete all button clicked.");
