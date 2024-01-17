@@ -94,7 +94,7 @@
         document.getElementById('uploadForm').addEventListener('submit', function (e) {
             e.preventDefault();
             console.log("Upload form submitted.");
-            hideAllMessages(); // Hide messages on form submit
+            // hideAllMessages(); // Hide messages on form submit
 
             var uploadButton = document.querySelector('#uploadForm button[type="submit"]');
             uploadButton.innerHTML = 'Uploading... <span class="spinner-border"></span>';
