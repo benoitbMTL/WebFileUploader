@@ -62,6 +62,11 @@
 
 
 
+        <div id="errorContainer" style="display:none;"></div>
+
+
+
+
     </div>
 
 
@@ -81,12 +86,16 @@
             fetch('/upload', {
                 method: 'POST',
                 body: formData
-            }).then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok ' + response.statusText);
-                }
-                return response.json();
             })
+                .then(async response => {
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        document.getElementById('errorContainer').innerHTML = errorText;
+                        document.getElementById('errorContainer').style.display = 'block';
+                        throw new Error('Network response was not ok.');
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     if (data.success) {
                         document.getElementById('uploadSuccess').style.display = 'block';
@@ -99,8 +108,6 @@
                     console.error('Error:', error);
                     uploadButton.innerHTML = 'Upload File';
                     uploadButton.disabled = false;
-                    // Ici, afficher la page d'erreur ou un message d'erreur
-                    alert("Failed to upload file: " + error.message);
                 });
         });
 
