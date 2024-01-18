@@ -115,12 +115,9 @@
                 console.log("Upload form submitted.");
                 hideAllMessages(); // Hide messages on form submit
 
-                var uploadButton = document.querySelector(
-                    '#uploadForm button[type="submit"]'
-                );
+                var uploadButton = document.querySelector('#uploadForm button[type="submit"]');
 
-                uploadButton.innerHTML =
-                    'Uploading... <span class="spinner-border"></span>';
+                uploadButton.innerHTML = 'Uploading... <span class="spinner-border"></span>';
                 uploadButton.disabled = true;
 
                 var startTime = new Date();
