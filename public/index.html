@@ -23,24 +23,28 @@
 
 <body>
     <div class="container mt-5">
-        <h2>File Upload</h2>
 
+        <!-- Line 1: Title on the left, buttons on the right -->
+        <div class="row justify-content-between mb-3">
+            <div class="col-auto">
+                <h2>File Upload</h2>
+            </div>
+            <div class="col-auto">
+                <button type="submit" form="uploadForm" class="btn btn-primary mr-2">
+                    Upload File
+                </button>
+                <button id="hardReloadButton" class="btn btn-secondary">Reset</button>
+            </div>
+        </div>
+
+        <!-- Line 2: File choose form -->
         <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data" class="mb-3">
             <div class="custom-file mb-3">
                 <input type="file" name="file" class="custom-file-input" id="customFile" />
                 <label class="custom-file-label" for="customFile">Choose file</label>
             </div>
-
-            <div>
-                <button type="submit" class="btn btn-primary mr-2">
-                    Upload File
-                </button>
-                <button id="deleteAllButton" class="btn btn-danger">
-                    Delete All Files
-                </button>
-                <button id="hardReloadButton" class="btn btn-secondary">Reset</button>
-            </div>
         </form>
+
 
         <div id="uploadSuccess" class="alert alert-success alert-dismissible fade show" style="display: none">
             <strong>Success!</strong> File Uploaded Successfully:
@@ -66,12 +70,26 @@
             </button>
         </div>
 
-        <div class="mt-4">
-            <h2>Uploaded Files</h2>
-            <iframe id="uploadFrame" src="/upload" style="width:100%; height:300px; border:none;"></iframe>
-
+        <!-- Line 3: Uploaded Files title with Delete All Files button on the right -->
+        <div class="row justify-content-between mb-3">
+            <div class="col-auto">
+                <h2>Uploaded Files</h2>
+            </div>
+            <div class="col-auto">
+                <button id="deleteAllButton" class="btn btn-danger">
+                    Delete All Files
+                </button>
+            </div>
         </div>
+
+        <!-- Line 4: Iframe -->
+        <iframe id="uploadFrame" src="/upload" style="width:100%; height:300px;"
+            class="border shadow-sm rounded"></iframe>
+
+
+
     </div>
+
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
@@ -87,60 +105,60 @@
         }
 
         document.getElementById("uploadForm").addEventListener("submit", function (e) {
-                e.preventDefault();
-                console.log("Upload form submitted.");
-                hideAllMessages(); // Hide messages on form submit
+            e.preventDefault();
+            console.log("Upload form submitted.");
+            hideAllMessages(); // Hide messages on form submit
 
-                var uploadButton = document.querySelector(
-                    '#uploadForm button[type="submit"]'
-                );
-                uploadButton.innerHTML =
-                    'Uploading... <span class="spinner-border"></span>';
-                uploadButton.disabled = true;
+            var uploadButton = document.querySelector(
+                '#uploadForm button[type="submit"]'
+            );
+            uploadButton.innerHTML =
+                'Uploading... <span class="spinner-border"></span>';
+            uploadButton.disabled = true;
 
-                var startTime = new Date();
-                console.log("Upload started at:", startTime);
+            var startTime = new Date();
+            console.log("Upload started at:", startTime);
 
-                var formData = new FormData(this);
-                fetch("/upload", {
-                    method: "POST",
-                    body: formData,
+            var formData = new FormData(this);
+            fetch("/upload", {
+                method: "POST",
+                body: formData,
+            })
+                .then((response) => {
+                    console.log("Upload response received. Status:", response.status);
+                    if (response.ok) {
+                        return response.json();
+                    } else if (response.status === 500) {
+                        throw new Error("Upload blocked by FortiWeb");
+                    } else {
+                        throw new Error(
+                            "Network response was not ok: " + response.statusText
+                        );
+                    }
                 })
-                    .then((response) => {
-                        console.log("Upload response received. Status:", response.status);
-                        if (response.ok) {
-                            return response.json();
-                        } else if (response.status === 500) {
-                            throw new Error("Upload blocked by FortiWeb");
-                        } else {
-                            throw new Error(
-                                "Network response was not ok: " + response.statusText
-                            );
-                        }
-                    })
-                    .then((data) => {
-                        console.log("Upload success. Data:", data);
-                        var endTime = new Date();
-                        var uploadDuration = (endTime - startTime) / 1000;
-                        document.getElementById("uploadSuccess").style.display = "block";
-                        document.getElementById("fileName").textContent = data.fileName;
-                        document.getElementById("uploadDuration").textContent =
-                            uploadDuration.toFixed(2);
-                        uploadButton.innerHTML = "Upload File";
-                        uploadButton.disabled = false;
-                                    document.getElementById('uploadFrame').src += ''; // Refresh the iframe
+                .then((data) => {
+                    console.log("Upload success. Data:", data);
+                    var endTime = new Date();
+                    var uploadDuration = (endTime - startTime) / 1000;
+                    document.getElementById("uploadSuccess").style.display = "block";
+                    document.getElementById("fileName").textContent = data.fileName;
+                    document.getElementById("uploadDuration").textContent =
+                        uploadDuration.toFixed(2);
+                    uploadButton.innerHTML = "Upload File";
+                    uploadButton.disabled = false;
+                    document.getElementById('uploadFrame').src += ''; // Refresh the iframe
 
-                    })
-                    .catch((error) => {
-                        console.error("Error:", error);
-                        if (error.message === "Upload blocked by FortiWeb") {
-                            document.getElementById("uploadBlocked").style.display =
-                                "block";
-                        }
-                        uploadButton.innerHTML = "Upload File";
-                        uploadButton.disabled = false;
-                    });
-            });
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+                    if (error.message === "Upload blocked by FortiWeb") {
+                        document.getElementById("uploadBlocked").style.display =
+                            "block";
+                    }
+                    uploadButton.innerHTML = "Upload File";
+                    uploadButton.disabled = false;
+                });
+        });
 
         $(".custom-file-input").on("change", function () {
             console.log("File selected:", $(this).val());
