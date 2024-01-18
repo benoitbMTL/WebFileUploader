@@ -45,11 +45,7 @@ app.get("/upload", async (req, res) => {
                 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
             </head>
             <body>
-                <ul class="list-group">
-                    ${fileInfos
-                      .map((fileInfo) => `<li class="list-group-item">${fileInfo}</li>`)
-                      .join("")}
-                </ul>
+                    <ul>${fileInfos.join("")}</ul>
             </body>
             </html>
         `);
@@ -57,6 +53,9 @@ app.get("/upload", async (req, res) => {
     res.status(500).send("Unable to scan directory: " + err);
   }
 });
+
+
+
 
 app.post("/delete-all", async (req, res) => {
   const directoryPath = path.join(__dirname, "upload");
@@ -77,6 +76,10 @@ app.post("/delete-all", async (req, res) => {
       .json({ success: false, message: "Error deleting files: " + err });
   }
 });
+
+
+
+
 
 app.listen(9000, () => {
   console.log("Server is running on port 9000");
