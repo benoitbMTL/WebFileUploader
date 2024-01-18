@@ -110,7 +110,6 @@
 
 
 
-        $(document).ready(function () {
             document.getElementById("uploadForm").addEventListener("submit", function (e) {
                 e.preventDefault();
                 console.log("Upload form submitted.");
@@ -119,16 +118,6 @@
                 var uploadButton = document.querySelector(
                     '#uploadForm button[type="submit"]'
                 );
-
-
-                // Check if uploadButton is not null
-                if (uploadButton) {
-                    uploadButton.innerHTML = 'Uploading... <span class="spinner-border"></span>';
-                    uploadButton.disabled = true;
-                } else {
-                    console.error("Upload button not found");
-                }
-
 
                 uploadButton.innerHTML =
                     'Uploading... <span class="spinner-border"></span>';
@@ -177,7 +166,6 @@
                         uploadButton.disabled = false;
                     });
             });
-        });
 
         $(".custom-file-input").on("change", function () {
             console.log("File selected:", $(this).val());
