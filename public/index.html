@@ -25,6 +25,7 @@
     <div class="container mt-5">
 
         <!-- Line 1: Title on the left, buttons on the right -->
+        <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data" class="mb-5">
         <div class="row justify-content-between mb-2">
             <div class="col-auto">
                 <h2>File Upload</h2>
@@ -38,7 +39,6 @@
         </div>
 
         <!-- Line 2: File choose form -->
-        <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data" class="mb-5">
             <div class="custom-file mb-3">
                 <input type="file" name="file" class="custom-file-input" id="customFile" />
                 <label class="custom-file-label" for="customFile">Choose file</label>
