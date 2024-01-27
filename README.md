@@ -12,8 +12,8 @@ WebFileUploader is a simple web application for uploading files to a server. It 
 
 ### Prerequisites
 
-- Docker
-- Git
+- Docker: https://docs.docker.com/engine/install/ubuntu/
+- Git: https://github.com/git-guides/install-git
 
 ### Steps to Install and Run
 
@@ -26,17 +26,17 @@ WebFileUploader is a simple web application for uploading files to a server. It 
 2. **Run the Update Script:**
 Execute the update.sh script to set up the Docker container. This script performs several tasks:
 
-- Stops and removes the existing Docker container if it's already running.
-- Updates the Git repository.
-- Builds a new Docker image from the current codebase.
-- Runs the Docker image as a container.
+   - Stops and removes the existing Docker container if it's already running.
+   - Updates the Git repository.
+   - Builds a new Docker image from the current codebase.
+   - Runs the Docker image as a container.
 
    ```bash
     chmod 744 update.sh
     ./update.sh
    ```
 
-3. **Access the Application:**
+1. **Access the Application:**
 After running the script, the application will be accessible at http://localhost:9000.
 
 ## Usage
