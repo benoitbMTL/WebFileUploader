@@ -86,7 +86,7 @@
         <div id="uploadBlocked" class="alert alert-warning alert-dismissible fade show mb-3" style="display: none">
             <strong>Upload Failed:</strong> FortiWeb has detected a potential
             security risk with your file and has stopped the upload process.<br />
-            Duration: <span id="uploadDuration"></span> seconds<br />
+            Upload Duration: <span id="uploadBlockedDuration"></span> seconds<br />
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -116,7 +116,6 @@
             hideAllMessages(); // Hide messages on form submit
 
             var uploadButton = document.querySelector('#uploadForm button[type="submit"]');
-
             uploadButton.innerHTML = 'Uploading... <span class="spinner-border"></span>';
             uploadButton.disabled = true;
 
@@ -155,13 +154,16 @@
                 })
                 .catch((error) => {
                     console.error("Error:", error);
+                    var endTime = new Date();
+                    var uploadDuration = (endTime - startTime) / 1000;
                     if (error.message === "Upload blocked by FortiWeb") {
-                        document.getElementById("uploadBlocked").style.display =
-                            "block";
+                        document.getElementById("uploadBlocked").style.display = "block";
+                        document.getElementById("uploadBlockedDuration").textContent = uploadDuration.toFixed(2);
                     }
                     uploadButton.innerHTML = "Upload File";
                     uploadButton.disabled = false;
                 });
+
         });
 
         $(".custom-file-input").on("change", function () {
