@@ -131,7 +131,7 @@
                     console.log("Upload response received. Status:", response.status);
                     if (response.ok) {
                         return response.json();
-                    } else if (response.status === 500) {
+                    } else if (response.status === 500 || response.status === 403) {
                         throw new Error("Upload blocked by FortiWeb");
                     } else {
                         throw new Error(
